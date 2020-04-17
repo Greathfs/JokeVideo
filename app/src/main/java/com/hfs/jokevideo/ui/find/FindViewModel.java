@@ -10,7 +10,7 @@ public class FindViewModel extends ViewModel {
 
     public FindViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        mText.setValue("This is find fragment");
     }
 
     public LiveData<String> getText() {

@@ -10,7 +10,7 @@ public class SofaViewModel extends ViewModel {
 
     public SofaViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is sofa fragment");
     }
 
     public LiveData<String> getText() {
