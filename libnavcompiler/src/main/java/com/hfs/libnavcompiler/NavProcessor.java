@@ -136,7 +136,7 @@ public class NavProcessor extends AbstractProcessor {
             //TypeElement是Element的一种。
             //如果我们的注解标记在了类名上。所以可以直接强转一下。使用它得到全类名
             TypeElement typeElement = (TypeElement) element;
-            //全类名com.mooc.ppjoke.home
+            //全类名com.hfs.jokevideo.home
             String clazName = typeElement.getQualifiedName().toString();
             //页面的id.此处不能重复,使用页面的类名做hascode即可
             int id = Math.abs(clazName.hashCode());
