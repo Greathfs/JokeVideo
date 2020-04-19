@@ -5,8 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.lang.reflect.Type;
 
+/**
+ * Json转化器
+ * 默认的Json转 Java Bean的转换器
+ */
 public class JsonConvert implements Convert {
-    //默认的Json转 Java Bean的转换器
+
     @Override
     public Object convert(String response, Type type) {
         JSONObject jsonObject = JSON.parseObject(response);

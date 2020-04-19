@@ -33,6 +33,7 @@ public class ApiService {
                 .addInterceptor(loggingInterceptor)
                 .build();
 
+        //https使用
         TrustManager[] trustManagers = new TrustManager[]{new X509TrustManager() {
             @Override
             public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
@@ -52,7 +53,7 @@ public class ApiService {
 
         try {
             SSLContext ssl = SSLContext.getInstance("SSL");
-            ssl.init(null,trustManagers,new SecureRandom());
+            ssl.init(null, trustManagers, new SecureRandom());
 
             HttpsURLConnection.setDefaultSSLSocketFactory(ssl.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
@@ -67,6 +68,12 @@ public class ApiService {
 
     }
 
+    /**
+     * 初始化
+     *
+     * @param baseUrl 请求基本地址
+     * @param convert 转化工具
+     */
     public static void init(String baseUrl, Convert convert) {
         sBaseUrl = baseUrl;
         if (convert == null) {
@@ -75,10 +82,24 @@ public class ApiService {
         sConvert = convert;
     }
 
+    /**
+     * Get 请求
+     *
+     * @param url 请求地址
+     * @param <T> 类型
+     * @return
+     */
     public static <T> GetRequest<T> get(String url) {
         return new GetRequest<>(sBaseUrl + url);
     }
 
+    /**
+     * Post 请求
+     *
+     * @param url 请求地址
+     * @param <T> 类型
+     * @return
+     */
     public static <T> PostRequest<T> post(String url) {
         return new PostRequest<>(sBaseUrl + url);
     }

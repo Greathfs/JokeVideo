@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 
+/**
+ * 同步请求拼接url
+ */
 public class UrlCreator {
 
     public static String createUrlFromParams(String url, Map<String, Object> params) {
@@ -28,3 +31,4 @@ public class UrlCreator {
         return builder.toString();
     }
 }
+

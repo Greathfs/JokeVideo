@@ -4,6 +4,9 @@ import java.util.Map;
 
 import okhttp3.FormBody;
 
+/**
+ * Post网络请求
+ */
 public class PostRequest<T> extends Request<T, PostRequest> {
     public PostRequest(String url) {
         super(url);

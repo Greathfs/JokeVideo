@@ -19,6 +19,9 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+/**
+ * 请求类
+ */
 public abstract class Request<T, R extends Request> {
     protected String mUrl;
     protected HashMap<String, String> mHeaders = new HashMap<>();

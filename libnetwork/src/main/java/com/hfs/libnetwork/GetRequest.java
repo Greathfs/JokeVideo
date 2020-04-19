@@ -1,5 +1,8 @@
 package com.hfs.libnetwork;
 
+/**
+ * Get请求
+ */
 public class GetRequest<T> extends Request<T, GetRequest> {
     public GetRequest(String url) {
         super(url);
