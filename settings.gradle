@@ -1,3 +1,4 @@
 include ':app', ':libnavannotation', ':libnavcompiler'
 rootProject.name='JokeVideo'
 include ':libnetwork'
+include ':libcommon'

@@ -1,4 +1,4 @@
-package com.hfs.jokevideo.utils;
+package com.hfs.libcommon;
 
 import android.app.Application;
 

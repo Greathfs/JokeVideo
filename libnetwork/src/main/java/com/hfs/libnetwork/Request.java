@@ -1,12 +1,17 @@
 package com.hfs.libnetwork;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.IntDef;
+import androidx.arch.core.executor.ArchTaskExecutor;
+
+import com.hfs.libnetwork.cache.CacheManager;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
@@ -50,7 +55,13 @@ public abstract class Request<T, R extends Request> {
     }
 
     private Type mType;
+    /**
+     * 缓存key
+     */
     private String cacheKey;
+    /**
+     * 缓存类型
+     */
     private int mCacheStrategy = NET_ONLY;
 
     public Request(String url) {
@@ -119,6 +130,11 @@ public abstract class Request<T, R extends Request> {
         if (mType == null) {
             throw new RuntimeException("同步方法,response 返回值 类型必须设置");
         }
+
+        if (mCacheStrategy == CACHE_ONLY) {
+            return readCache();
+        }
+
         ApiResponse<T> result = null;
         try {
             Response response = getCall().execute();
@@ -132,24 +148,48 @@ public abstract class Request<T, R extends Request> {
     }
 
     public void execute(final JsonCallback callback) {
-        getCall().enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                ApiResponse<T> apiResponse = new ApiResponse<>();
-                apiResponse.message = e.getMessage();
-                callback.onError(apiResponse);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                ApiResponse<T> apiResponse = parseResponse(response,callback);
-                if (!apiResponse.success) {
-                    callback.onError(apiResponse);
-                }else {
-                    callback.onSuccess(apiResponse);
+        if (mCacheStrategy != NET_ONLY) {
+            ArchTaskExecutor.getIOThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    ApiResponse<T> response = readCache();
+                    if (callback != null && response.body != null) {
+                        callback.onCacheSuccess(response);
+                    }
                 }
-            }
-        });
+            });
+        }
+        if (mCacheStrategy != CACHE_ONLY) {
+            getCall().enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    ApiResponse<T> result = new ApiResponse<>();
+                    result.message = e.getMessage();
+                    callback.onError(result);
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    ApiResponse<T> result = parseResponse(response, callback);
+                    if (!result.success) {
+                        callback.onError(result);
+                    } else {
+                        callback.onSuccess(result);
+                    }
+                }
+            });
+        }
+    }
+
+    private ApiResponse<T> readCache() {
+        String key = TextUtils.isEmpty(cacheKey) ? generateCacheKey() : cacheKey;
+        Object cache = CacheManager.getCache(key);
+        ApiResponse<T> result = new ApiResponse<>();
+        result.status = 304;
+        result.message = "缓存获取成功";
+        result.body = (T) cache;
+        result.success = true;
+        return result;
     }
 
     private ApiResponse<T> parseResponse(Response response, JsonCallback callback) {
@@ -183,6 +223,19 @@ public abstract class Request<T, R extends Request> {
         result.status = status;
         result.message = message;
 
+        if (mCacheStrategy != NET_ONLY && result.success && result.body != null && result.body instanceof Serializable) {
+            saveCache(result.body);
+        }
         return result;
+    }
+
+    private void saveCache(T body) {
+        String key = TextUtils.isEmpty(cacheKey) ? generateCacheKey() : cacheKey;
+        CacheManager.save(key, body);
+    }
+
+    private String generateCacheKey() {
+        cacheKey = UrlCreator.createUrlFromParams(mUrl, mParams);
+        return cacheKey;
     }
 }

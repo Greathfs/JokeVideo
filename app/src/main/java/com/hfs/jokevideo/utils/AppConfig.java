@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.hfs.jokevideo.model.BottomBar;
 import com.hfs.jokevideo.model.Destination;
+import com.hfs.libcommon.AppGlobals;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -12,12 +12,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
-
-        javaCompileOptions{
-            annotationProcessorOptions{
-                arguments=["room.schemaLocation":"$projectDir/schemas".toString()]
-            }
-        }
     }
 
     buildTypes {
@@ -26,10 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility "1.8"
-        targetCompatibility "1.8"
-    }
+
 }
 
 dependencies {
@@ -39,13 +30,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.2.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.5.0'
-    implementation "android.arch.persistence.room:runtime:1.1.1"
-    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
-    implementation "android.arch.lifecycle:extensions:1.1.1"
-    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
-    implementation 'com.alibaba:fastjson:1.2.59'
-    compileOnly project(':libcommon')
-
 }

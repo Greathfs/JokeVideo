@@ -12,6 +12,7 @@ import androidx.navigation.fragment.FragmentNavigator;
 
 import com.hfs.jokevideo.model.Destination;
 import com.hfs.jokevideo.navigator.FixFragmentNavigator;
+import com.hfs.libcommon.AppGlobals;
 
 import java.util.HashMap;
 import java.util.Iterator;

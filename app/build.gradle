@@ -41,4 +41,6 @@ dependencies {
 
     implementation project(':libnavannotation')
     annotationProcessor project(":libnavcompiler")
+    implementation project(':libnetwork')
+    implementation project(':libcommon')
 }
