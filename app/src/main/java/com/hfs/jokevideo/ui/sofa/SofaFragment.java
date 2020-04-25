@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.hfs.jokevideo.R;
 import com.hfs.libnavannotation.FragmentDestination;
 
+/**
+ * 沙发
+ */
 @FragmentDestination(pageUrl = "main/tabs/sofa" ,asStarter = false)
 public class SofaFragment extends Fragment {
     private static final String TAG = "SofaFragment";
@@ -25,7 +28,6 @@ public class SofaFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
         mSofaViewModel =
                 ViewModelProviders.of(this).get(SofaViewModel.class);
         View root = inflater.inflate(R.layout.fragment_sofa, container, false);

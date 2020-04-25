@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.hfs.jokevideo.R;
 import com.hfs.libnavannotation.FragmentDestination;
 
+/**
+ * 首页
+ */
 @FragmentDestination(pageUrl = "main/tabs/home" ,asStarter = true)
 public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
@@ -25,7 +28,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);

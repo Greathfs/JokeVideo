@@ -28,8 +28,17 @@ import okhttp3.Response;
  * 请求类
  */
 public abstract class Request<T, R extends Request> {
+    /**
+     * 请求地址
+     */
     protected String mUrl;
+    /**
+     * 请求头
+     */
     protected HashMap<String, String> mHeaders = new HashMap<>();
+    /**
+     * 请求参数
+     */
     protected HashMap<String, Object> mParams = new HashMap<>();
 
     /**

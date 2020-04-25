@@ -2,6 +2,9 @@ package com.hfs.jokevideo.model;
 
 import java.util.List;
 
+/**
+ * 自定义底部导航
+ */
 public class BottomBar {
 
     /**
@@ -13,7 +16,10 @@ public class BottomBar {
     public String activeColor;
     public String inActiveColor;
     public List<Tab> tabs;
-    public int selectTab;//底部导航栏默认选中项
+    /**
+     * 底部导航栏默认选中项
+     */
+    public int selectTab;
 
     public static class Tab {
         /**

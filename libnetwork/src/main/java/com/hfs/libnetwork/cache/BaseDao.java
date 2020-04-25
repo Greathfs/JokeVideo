@@ -8,6 +8,9 @@ import androidx.room.Update;
 
 import java.util.List;
 
+/**
+ * 数据库操作基础类
+ */
 @Dao
 public interface BaseDao<T> {
 

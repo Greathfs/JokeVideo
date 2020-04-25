@@ -7,6 +7,9 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
+/**
+ * 缓存
+ */
 @Entity(tableName = "cache")
 public class Cache implements Serializable {
 

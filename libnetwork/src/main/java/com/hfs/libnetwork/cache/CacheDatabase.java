@@ -9,6 +9,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.hfs.libcommon.AppGlobals;
 
+/**
+ * 缓存数据库
+ */
 @Database(entities = {Cache.class},version = 1,exportSchema = true)
 public abstract class CacheDatabase extends RoomDatabase {
     private static final CacheDatabase database;

@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.hfs.jokevideo.R;
 import com.hfs.libnavannotation.FragmentDestination;
 
+/**
+ * 发现
+ */
 @FragmentDestination(pageUrl = "main/tabs/find", asStarter = false)
 public class FindFragment extends Fragment {
     private static final String TAG = "FindFragment";
@@ -25,7 +28,6 @@ public class FindFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
         mFindViewModel =
                 ViewModelProviders.of(this).get(FindViewModel.class);
         View root = inflater.inflate(R.layout.fragment_find, container, false);

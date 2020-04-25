@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.hfs.jokevideo.R;
 import com.hfs.libnavannotation.FragmentDestination;
 
+/**
+ * 我的
+ */
 @FragmentDestination(pageUrl = "main/tabs/my" ,asStarter = false)
 public class MyFragment extends Fragment {
     private static final String TAG = "MyFragment";
@@ -25,7 +28,6 @@ public class MyFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
         mMyViewModel =
                 ViewModelProviders.of(this).get(MyViewModel.class);
         View root = inflater.inflate(R.layout.fragment_my, container, false);
