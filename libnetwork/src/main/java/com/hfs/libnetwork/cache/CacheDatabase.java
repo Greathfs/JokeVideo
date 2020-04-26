@@ -1,13 +1,10 @@
 package com.hfs.libnetwork.cache;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.migration.Migration;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.hfs.libcommon.AppGlobals;
+import com.hfs.libcommon.global.AppGlobals;
 
 /**
  * 缓存数据库

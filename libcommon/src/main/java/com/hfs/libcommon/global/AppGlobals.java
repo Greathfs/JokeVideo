@@ -1,4 +1,4 @@
-package com.hfs.libcommon;
+package com.hfs.libcommon.global;
 
 import android.app.Application;
 
