@@ -31,7 +31,7 @@
 
 
         <!--   视频区域-->
-        <com.mooc.ppjoke.view.ListPlayerView
+        <com.hfs.jokevideo.view.ListPlayerView
             android:id="@+id/list_player_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
