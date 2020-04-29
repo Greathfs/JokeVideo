@@ -12,15 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hfs.jokevideo.R;
+import com.hfs.jokevideo.model.Feed;
+import com.hfs.jokevideo.ui.base.AbsListFragment;
 import com.hfs.libnavannotation.FragmentDestination;
 
 /**
  * 首页
  */
 @FragmentDestination(pageUrl = "main/tabs/home" ,asStarter = true)
-public class HomeFragment extends Fragment {
+public class HomeFragment extends AbsListFragment<Feed> {
     private static final String TAG = "HomeFragment";
 
     private HomeViewModel homeViewModel;
@@ -39,5 +43,10 @@ public class HomeFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    @Override
+    public PagedListAdapter<Feed, RecyclerView.ViewHolder> getAdapter() {
+        return null;
     }
 }
