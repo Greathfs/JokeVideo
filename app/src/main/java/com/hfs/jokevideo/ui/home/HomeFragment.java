@@ -1,21 +1,10 @@
 package com.hfs.jokevideo.ui.home;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hfs.jokevideo.R;
 import com.hfs.jokevideo.model.Feed;
 import com.hfs.jokevideo.ui.base.AbsListFragment;
 import com.hfs.libnavannotation.FragmentDestination;
@@ -24,29 +13,14 @@ import com.hfs.libnavannotation.FragmentDestination;
  * 首页
  */
 @FragmentDestination(pageUrl = "main/tabs/home" ,asStarter = true)
-public class HomeFragment extends AbsListFragment<Feed> {
+public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
     private static final String TAG = "HomeFragment";
 
-    private HomeViewModel homeViewModel;
+    private String mFeedType;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
-    }
-
-    @Override
-    public PagedListAdapter<Feed, RecyclerView.ViewHolder> getAdapter() {
-        return null;
+    public PagedListAdapter getAdapter() {
+        mFeedType = getArguments() == null ? "all" : getArguments().getString("feedType");
+        return new FeedAdapter(getContext(), mFeedType);
     }
 }

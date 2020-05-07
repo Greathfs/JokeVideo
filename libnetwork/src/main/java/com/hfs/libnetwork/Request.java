@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.arch.core.executor.ArchTaskExecutor;
 
 import com.hfs.libnetwork.cache.CacheManager;
@@ -27,7 +28,7 @@ import okhttp3.Response;
 /**
  * 请求类
  */
-public abstract class Request<T, R extends Request> {
+public abstract class Request<T, R extends Request> implements Cloneable{
     /**
      * 请求地址
      */
@@ -246,5 +247,11 @@ public abstract class Request<T, R extends Request> {
     private String generateCacheKey() {
         cacheKey = UrlCreator.createUrlFromParams(mUrl, mParams);
         return cacheKey;
+    }
+
+    @NonNull
+    @Override
+    public Request clone() throws CloneNotSupportedException {
+        return (Request<T, R>) super.clone();
     }
 }
