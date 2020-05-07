@@ -15,12 +15,13 @@ public abstract class AbsViewModel<T> extends ViewModel {
 
     private DataSource mDataSource;
     private LiveData<PagedList<T>> mPageData;
+    protected PagedList.Config mConfig;
 
     private MutableLiveData<Boolean> mBoundaryPageData = new MutableLiveData<>();
 
     public AbsViewModel() {
 
-        PagedList.Config config = new PagedList.Config.Builder()
+        mConfig = new PagedList.Config.Builder()
                 .setPageSize(10)
                 .setInitialLoadSizeHint(12)
                 // .setMaxSize(100)；
@@ -28,7 +29,7 @@ public abstract class AbsViewModel<T> extends ViewModel {
                 // .setPrefetchDistance()
                 .build();
 
-        mPageData = new LivePagedListBuilder(mFactory, config)
+        mPageData = new LivePagedListBuilder(mFactory, mConfig)
                 .setInitialLoadKey(0)
                 .setBoundaryCallback(mCallback)
                 .build();
