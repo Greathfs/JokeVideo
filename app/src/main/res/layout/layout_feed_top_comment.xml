@@ -6,13 +6,13 @@
     <data>
         <variable
             name="comment"
-            type="com.hfs.jokevideo.model.Comment" />
+            type="com.mooc.ppjoke.model.Comment" />
 
         <import type="android.text.TextUtils"/>
 
         <import type="android.view.View"/>
 
-        <import type="com.hfs.jokevideo.utils.StringConvert"/>
+        <import type="com.mooc.ppjoke.utils.StringConvert"/>
     </data>
 
     <FrameLayout
@@ -38,7 +38,7 @@
                 android:orientation="horizontal">
 
 
-                <com.hfs.libcommon.view.PPImageView
+                <com.mooc.libcommon.view.PPImageView
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
@@ -46,7 +46,7 @@
                     app:isCircle="@{true}"
                     tools:src="@mipmap/ic_launcher_round">
 
-                </com.hfs.libcommon.view.PPImageView>
+                </com.mooc.libcommon.view.PPImageView>
 
                 <TextView
                     android:id="@+id/user_name"
@@ -103,7 +103,7 @@
                 android:layout_marginTop="@dimen/dp_10"
                 android:visibility="@{TextUtils.isEmpty(comment.imageUrl)?View.GONE:View.VISIBLE}">
 
-                <com.hfs.libcommon.view.PPImageView
+                <com.mooc.libcommon.view.PPImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

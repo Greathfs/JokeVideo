@@ -7,15 +7,15 @@
 
         <variable
             name="feed"
-            type="com.hfs.jokevideo.model.Feed" />
+            type="com.mooc.ppjoke.model.Feed" />
 
         <variable
             name="lifeCycleOwner"
             type="androidx.lifecycle.LifecycleOwner" />
 
-        <import type="com.hfs.jokevideo.model.Feed" />
+        <import type="com.mooc.ppjoke.model.Feed" />
 
-        <import type="com.hfs.jokevideo.utils.StringConvert" />
+        <import type="com.mooc.ppjoke.utils.StringConvert" />
 
         <import type="android.content.Context" />
 

@@ -9,7 +9,7 @@
             name="user"
             type="User" />
 
-        <import type="com.hfs.jokevideo.model.User" />
+        <import type="com.mooc.ppjoke.model.User" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
         android:paddingLeft="@dimen/dp_16"
         android:paddingRight="@dimen/dp_16">
 
-        <com.hfs.libcommon.view.PPImageView
+        <com.mooc.libcommon.view.PPImageView
             android:id="@+id/avatar"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"

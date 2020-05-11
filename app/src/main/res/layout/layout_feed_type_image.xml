@@ -8,7 +8,7 @@
             name="feed"
             type="Feed" />
 
-        <import type="com.hfs.jokevideo.model.Feed"/>
+        <import type="com.mooc.ppjoke.model.Feed"/>
 
     </data>
 
@@ -31,7 +31,7 @@
 
 
         <!--   图片区域-->
-        <com.hfs.libcommon.view.PPImageView
+        <com.mooc.libcommon.view.PPImageView
             android:id="@+id/feed_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

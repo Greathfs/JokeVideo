@@ -4,17 +4,37 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "com.hfs.jokevideo"
+        applicationId "com.mooc.ppjoke"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        defaultConfig {
+            ndk {
+                // 设置支持的SO库架构
+                abiFilters 'armeabi-v7a'//, 'x86_64', 'arm64-v8a'
+            }
+        }
+    }
+
+    signingConfigs {
+        joke {
+            storePassword '123456'
+            keyAlias = 'pipijoke'
+            keyPassword '123456'
+            storeFile file('../key')
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.joke
+        }
+        debug {
+            signingConfig signingConfigs.joke
         }
     }
 
@@ -35,6 +55,10 @@ dependencies {
     annotationProcessor project(":libnavcompiler")
     implementation project(':libnetwork')
     implementation project(':libcommon')
+
+    //QQ快捷登录
+    implementation files('libs/open_sdk_r6140_lite.jar')
+
     //错误收集
     implementation 'com.tencent.bugly:crashreport:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'

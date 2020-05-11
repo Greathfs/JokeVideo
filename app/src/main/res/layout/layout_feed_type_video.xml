@@ -8,7 +8,7 @@
             name="feed"
             type="Feed" />
 
-        <import type="com.hfs.jokevideo.model.Feed" />
+        <import type="com.mooc.ppjoke.model.Feed" />
 
     </data>
 
@@ -31,7 +31,7 @@
 
 
         <!--   视频区域-->
-        <com.hfs.jokevideo.view.ListPlayerView
+        <com.mooc.ppjoke.view.ListPlayerView
             android:id="@+id/list_player_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
