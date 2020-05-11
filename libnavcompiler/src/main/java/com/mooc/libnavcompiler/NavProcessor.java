@@ -40,7 +40,7 @@ import javax.tools.StandardLocation;
  */
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@SupportedAnnotationTypes({"com.hfs.libnavannotation.FragmentDestination", "com.hfs.libnavannotation.ActivityDestination"})
+@SupportedAnnotationTypes({"com.mooc.libnavannotation.FragmentDestination", "com.mooc.libnavannotation.ActivityDestination"})
 public class NavProcessor extends AbstractProcessor {
     private static final String OUTPUT_FILE_NAME = "destination.json";
 

@@ -38,8 +38,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.publish.PublishActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.login.LoginActivity"></activity>
+        <activity android:name=".ui.login.LoginActivity"/>
 
 
         <!-- 注册SDKActivity -->
