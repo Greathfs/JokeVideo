@@ -3,13 +3,15 @@ package com.mooc.ppjoke.model;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 
 import java.io.Serializable;
 
 /**
  * 帖子
  */
-public class Feed implements Serializable {
+public class Feed extends BaseObservable implements Serializable {
     /**
      * 图文
      */
@@ -52,7 +54,21 @@ public class Feed implements Serializable {
 
     public User author;
     public Comment topComment;
+
+    @Bindable
+    public Ugc getUgc() {
+        return ugc;
+    }
+
+    public void setUgc(Ugc ugc) {
+        if (ugc == null) {
+            ugc = new Ugc();
+        }
+        this.ugc = ugc;
+    }
+
     public Ugc ugc;
+
 
     @Override
     public boolean equals(@Nullable Object obj) {

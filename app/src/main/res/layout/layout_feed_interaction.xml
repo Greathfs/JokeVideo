@@ -19,6 +19,8 @@
 
         <import type="android.content.Context" />
 
+        <import type="com.mooc.ppjoke.ui.home.InterActionPresenter" />
+
     </data>
 
     <LinearLayout
@@ -34,6 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="@{()->InterActionPresenter.toggleFeedLike(lifeCycleOwner,feed)}"
             android:text="@{feed.ugc.likeCount>0?StringConvert.convertFeedUgc(feed.ugc.likeCount):@string/like}"
             android:textColor="@{feed.ugc.hasLiked?@color/color_theme:@color/color_3d3}"
             android:textSize="@dimen/sp_14"
@@ -54,6 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="@{()->InterActionPresenter.toggleFeedDiss(lifeCycleOwner,feed)}"
             android:text="踩"
             android:textColor="@{feed.ugc.hasdiss?@color/color_theme:@color/color_3d3}"
             android:textSize="@dimen/sp_14"

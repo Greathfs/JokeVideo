@@ -15,6 +15,7 @@ import com.mooc.libnetwork.ApiResponse;
 import com.mooc.libnetwork.ApiService;
 import com.mooc.libnetwork.JsonCallback;
 import com.mooc.libnetwork.Request;
+import com.mooc.ppjoke.ui.login.UserManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +73,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
 
         Request request = ApiService.get("/feeds/queryHotFeedsList")
                 .addParam("feedType", null)
-                .addParam("userId", 0)
+                .addParam("userId", UserManager.get().getUserId())
                 .addParam("feedId", key)
                 .addParam("pageCount", 10)
                 .responseType(new TypeReference<ArrayList<Feed>>() {

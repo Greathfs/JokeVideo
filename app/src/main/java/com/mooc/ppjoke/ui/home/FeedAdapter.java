@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,7 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
 
     private final LayoutInflater mLayoutInflater;
     protected String mCategory;
+    protected Context mContext;
 
     protected FeedAdapter(Context context,String category) {
         super(new DiffUtil.ItemCallback<Feed>() {
@@ -34,6 +36,7 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
         });
         mLayoutInflater = LayoutInflater.from(context);
         mCategory = category;
+        mContext = context;
     }
 
     @Override
@@ -72,10 +75,12 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
                 LayoutFeedTypeImageBinding imageBinding = (LayoutFeedTypeImageBinding) mBinding;
                 imageBinding.setFeed(item);
                 imageBinding.feedImage.bindData(item.width, item.height, 16, item.cover);
+                imageBinding.setLifeCycleOwner((LifecycleOwner) mContext);
             } else if (mBinding instanceof LayoutFeedTypeVideoBinding) {
                 LayoutFeedTypeVideoBinding videoBinding = (LayoutFeedTypeVideoBinding) mBinding;
                 videoBinding.setFeed(item);
                 videoBinding.listPlayerView.bindData(mCategory, item.width, item.height, item.cover, item.url);
+                videoBinding.setLifecycleOwner((LifecycleOwner) mContext);
             }
         }
     }
