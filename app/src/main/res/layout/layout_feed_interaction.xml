@@ -19,7 +19,7 @@
 
         <import type="android.content.Context" />
 
-        <import type="com.mooc.ppjoke.ui.home.InterActionPresenter" />
+        <import type="com.mooc.ppjoke.ui.InterActionPresenter" />
 
     </data>
 
@@ -98,6 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="@{()->InterActionPresenter.openShare(((Context)lifeCycleOwner),feed)}"
             android:text="@{feed.ugc.shareCount>0?StringConvert.convertFeedUgc(feed.ugc.shareCount):@string/share}"
             android:textColor="@color/color_3d3"
             android:textSize="@dimen/sp_14"

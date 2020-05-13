@@ -34,8 +34,9 @@ public class Ugc extends BaseObservable implements Serializable {
     }
 
     public void setHasLiked(boolean hasLiked) {
-        if (this.hasLiked == hasLiked)
+        if (this.hasLiked == hasLiked) {
             return;
+        }
         if (hasLiked) {
             likeCount = likeCount + 1;
             setHasdiss(false);
@@ -52,19 +53,31 @@ public class Ugc extends BaseObservable implements Serializable {
     }
 
     public void setHasdiss(boolean hasdiss) {
-        if (this.hasdiss == hasdiss)
+        if (this.hasdiss == hasdiss) {
             return;
+        }
         if (hasdiss) {
             setHasLiked(false);
         }
         this.hasdiss = hasdiss;
-        notifyPropertyChanged(BR.);
+        notifyPropertyChanged(BR._all);
+    }
+
+    @Bindable
+    public int getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(int shareCount) {
+        this.shareCount = shareCount;
+        notifyPropertyChanged(BR._all);
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (obj == null || !(obj instanceof Ugc))
+        if (obj == null || !(obj instanceof Ugc)) {
             return false;
+        }
         Ugc newUgc = (Ugc) obj;
         return likeCount == newUgc.likeCount
                 && shareCount == newUgc.shareCount
