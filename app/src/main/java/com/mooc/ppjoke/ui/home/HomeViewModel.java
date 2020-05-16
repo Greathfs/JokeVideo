@@ -30,10 +30,10 @@ public class HomeViewModel extends AbsViewModel<Feed> {
      * 同步位,防止Paging帮我们处理后我们自己还处理
      */
     private AtomicBoolean loadAfter = new AtomicBoolean(false);
-
     public MutableLiveData<PagedList<Feed>> getCacheLiveData() {
         return mCacheLiveData;
     }
+    private String mFeedType;
 
     @Override
     public DataSource createDataSource() {
@@ -119,4 +119,9 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             }
         });
     }
+    public void setFeedType(String feedType) {
+
+        mFeedType = feedType;
+    }
+
 }
