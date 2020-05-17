@@ -13,6 +13,12 @@
         <item name="android:windowAllowReturnTransitionOverlap">false</item>
     </style>
 
+    <style name="launcher" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+
     <style name="active" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/color_000</item>

@@ -72,7 +72,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
         }
 
         Request request = ApiService.get("/feeds/queryHotFeedsList")
-                .addParam("feedType", null)
+                .addParam("feedType", mFeedType)
                 .addParam("userId", UserManager.get().getUserId())
                 .addParam("feedId", key)
                 .addParam("pageCount", 10)
