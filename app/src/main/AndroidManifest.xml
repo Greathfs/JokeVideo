@@ -45,6 +45,10 @@
 
         <activity android:name=".ui.login.LoginActivity"/>
 
+        <activity android:name=".ui.detail.FeedDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/feedDetail"/>
+
 
         <!-- 注册SDKActivity -->
         <activity

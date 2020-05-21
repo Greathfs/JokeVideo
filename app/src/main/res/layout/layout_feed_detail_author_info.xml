@@ -19,6 +19,8 @@
 
         <import type="com.mooc.ppjoke.utils.TimeUtils" />
 
+        <import type="com.mooc.ppjoke.ui.InterActionPresenter" />
+
         <variable
             name="owner"
             type="androidx.lifecycle.LifecycleOwner" />
@@ -44,7 +46,7 @@
             app:isCircle="@{true}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/author_name"
@@ -58,7 +60,7 @@
             android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@+id/author_avatar"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="神秘的jetpack"/>
+            tools:text="神秘的jetpack" />
 
         <TextView
             android:id="@+id/create_time"
@@ -72,7 +74,7 @@
             android:textStyle="normal"
             app:layout_constraintLeft_toRightOf="@+id/author_avatar"
             app:layout_constraintTop_toBottomOf="@+id/author_name"
-            tools:text="3天前"/>
+            tools:text="3天前" />
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
@@ -80,6 +82,7 @@
             android:layout_marginRight="@dimen/dp_16"
             android:backgroundTint="@{fullscreen?@color/transparent:@color/color_theme}"
             android:gravity="center"
+            android:onClick="@{()->InterActionPresenter.toggleFollowUser(owner,feed)}"
             android:paddingLeft="@dimen/dp_16"
             android:paddingTop="@dimen/dp_5"
             android:paddingRight="@dimen/dp_16"

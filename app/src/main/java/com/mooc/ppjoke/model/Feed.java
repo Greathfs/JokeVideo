@@ -52,6 +52,14 @@ public class Feed extends BaseObservable implements Serializable {
     public String url;
     public String cover;
 
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
     public User author;
     public Comment topComment;
 
@@ -68,6 +76,8 @@ public class Feed extends BaseObservable implements Serializable {
     }
 
     public Ugc ugc;
+
+
 
 
     @Override

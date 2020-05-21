@@ -5,9 +5,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.alibaba.fastjson.JSONObject;
@@ -15,10 +17,13 @@ import com.mooc.libcommon.global.AppGlobals;
 import com.mooc.libnetwork.ApiResponse;
 import com.mooc.libnetwork.ApiService;
 import com.mooc.libnetwork.JsonCallback;
+import com.mooc.ppjoke.model.Comment;
 import com.mooc.ppjoke.model.Feed;
 import com.mooc.ppjoke.model.User;
 import com.mooc.ppjoke.ui.login.UserManager;
 import com.mooc.ppjoke.ui.share.ShareDialog;
+
+import org.jetbrains.annotations.NotNull;
 
 public class InterActionPresenter {
 
@@ -27,6 +32,8 @@ public class InterActionPresenter {
     private static final String URL_TOGGLE_FEED_DISS = "/ugc/dissFeed";
 
     private static final String URL_SHARE = "/ugc/increaseShareCount";
+
+    private static final String URL_TOGGLE_COMMENT_LIKE = "/ugc/toggleCommentLike";
 
     /**
      * 给一个帖子点赞/取消点赞，它和给帖子点踩一踩是互斥的
@@ -144,6 +151,198 @@ public class InterActionPresenter {
         });
 
         shareDialog.show();
+    }
+
+    //给一个帖子的评论点赞/取消点赞
+    public static void toggleCommentLike(LifecycleOwner owner, Comment comment) {
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleCommentLikeInternal(comment);
+            }
+        })) {
+        } else {
+            toggleCommentLikeInternal(comment);
+        }
+    }
+
+    private static void toggleCommentLikeInternal(Comment comment) {
+
+        ApiService.get(URL_TOGGLE_COMMENT_LIKE)
+                .addParam("commentId", comment.commentId)
+                .addParam("userId", UserManager.get().getUserId())
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean hasLiked = response.body.getBooleanValue("hasLiked");
+                            comment.getUgc().setHasLiked(hasLiked);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+
+    //收藏/取消收藏一个帖子
+    public static void toggleFeedFavorite(LifecycleOwner owner, Feed feed) {
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleFeedFavorite(feed);
+            }
+        })) {
+        } else {
+            toggleFeedFavorite(feed);
+        }
+    }
+
+    private static void toggleFeedFavorite(Feed feed) {
+        ApiService.get("/ugc/toggleFavorite")
+                .addParam("itemId", feed.itemId)
+                .addParam("userId", UserManager.get().getUserId())
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean hasFavorite = response.body.getBooleanValue("hasFavorite");
+                            feed.getUgc().setHasFavorite(hasFavorite);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    //关注/取消关注一个用户
+    public static void toggleFollowUser(LifecycleOwner owner, Feed feed) {
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleFollowUser(feed);
+            }
+        })) {
+        } else {
+            toggleFollowUser(feed);
+        }
+    }
+
+    private static void toggleFollowUser(Feed feed) {
+        ApiService.get("/ugc/toggleUserFollow")
+                .addParam("followUserId", UserManager.get().getUserId())
+                .addParam("userId", feed.author.userId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean hasFollow = response.body.getBooleanValue("hasLiked");
+                            feed.getAuthor().setHasFollow(hasFollow);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    public static LiveData<Boolean> deleteFeed(Context context, long itemId) {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        new AlertDialog.Builder(context)
+                .setNegativeButton("删除", (dialog, which) -> {
+                    dialog.dismiss();
+                    deleteFeedInternal(liveData, itemId);
+                }).setPositiveButton("取消", (dialog, which) -> dialog.dismiss()).setMessage("确定要删除这条评论吗？").create().show();
+        return liveData;
+    }
+
+    private static void deleteFeedInternal(MutableLiveData<Boolean> liveData, long itemId) {
+        ApiService.get("/feeds/deleteFeed")
+                .addParam("itemId", itemId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean success = response.body.getBoolean("result");
+                            liveData.postValue(success);
+                            showToast("删除成功");
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    //删除某个帖子的一个评论
+    public static LiveData<Boolean> deleteFeedComment(Context context, long itemId, long commentId) {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        new AlertDialog.Builder(context)
+                .setNegativeButton("删除", (dialog, which) -> {
+                    dialog.dismiss();
+                    deleteFeedCommentInternal(liveData, itemId, commentId);
+                }).setPositiveButton("取消", (dialog, which) -> dialog.dismiss()).setMessage("确定要删除这条评论吗？").create().show();
+        return liveData;
+    }
+
+    private static void deleteFeedCommentInternal(LiveData liveData, long itemId, long commentId) {
+        ApiService.get("/comment/deleteComment")
+                .addParam("userId", UserManager.get().getUserId())
+                .addParam("commentId", commentId)
+                .addParam("itemId", itemId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean result = response.body.getBooleanValue("result");
+                            ((MutableLiveData) liveData).postValue(result);
+                            showToast("评论删除成功");
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+
+    private static boolean isLogin(LifecycleOwner owner, Observer<User> observer) {
+        if (UserManager.get().isLogin()) {
+            return true;
+        } else {
+            LiveData<User> liveData = UserManager.get().login(AppGlobals.getApplication());
+            if (owner == null) {
+                liveData.observeForever(loginObserver(observer, liveData));
+            } else {
+                liveData.observe(owner, loginObserver(observer, liveData));
+            }
+            return false;
+        }
+    }
+
+    @NotNull
+    private static Observer<User> loginObserver(Observer<User> observer, LiveData<User> liveData) {
+        return new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                liveData.removeObserver(this);
+                if (user != null && observer != null) {
+                    observer.onChanged(user);
+                }
+            }
+        };
     }
 
     private static void showToast(String message) {

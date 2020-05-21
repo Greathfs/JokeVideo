@@ -18,6 +18,10 @@
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
+    <style name="feedDetail" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 
     <style name="active" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
