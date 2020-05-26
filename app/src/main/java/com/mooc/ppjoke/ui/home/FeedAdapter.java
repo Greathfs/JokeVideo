@@ -15,11 +15,13 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mooc.libcommon.extention.AbsPagedListAdapter;
+import com.mooc.libcommon.extention.LiveDataBus;
 import com.mooc.ppjoke.BR;
 import com.mooc.ppjoke.R;
 import com.mooc.ppjoke.databinding.LayoutFeedTypeImageBinding;
 import com.mooc.ppjoke.databinding.LayoutFeedTypeVideoBinding;
 import com.mooc.ppjoke.model.Feed;
+import com.mooc.ppjoke.ui.InterActionPresenter;
 import com.mooc.ppjoke.ui.detail.FeedDetailActivity;
 import com.mooc.ppjoke.view.ListPlayerView;
 
@@ -74,7 +76,14 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
             @Override
             public void onClick(View v) {
                 FeedDetailActivity.startFeedDetailActivity(mContext, feed, mCategory);
-
+                onStartFeedDetailActivity(feed);
+                if (mFeedObserver == null) {
+                    mFeedObserver = new FeedObserver();
+                    LiveDataBus.get()
+                            .with(InterActionPresenter.DATA_FROM_INTERACTION)
+                            .observe((LifecycleOwner) mContext, mFeedObserver);
+                }
+                mFeedObserver.setFeed(feed);
             }
         });
 

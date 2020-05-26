@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mooc.libcommon.extention.LiveDataBus;
 import com.mooc.libcommon.global.AppGlobals;
 import com.mooc.libnetwork.ApiResponse;
 import com.mooc.libnetwork.ApiService;
@@ -26,6 +27,8 @@ import com.mooc.ppjoke.ui.share.ShareDialog;
 import org.jetbrains.annotations.NotNull;
 
 public class InterActionPresenter {
+
+    public static final String DATA_FROM_INTERACTION = "data_from_interaction";
 
     private static final String URL_TOGGLE_FEED_LIK = "/ugc/toggleFeedLike";
 
@@ -66,6 +69,8 @@ public class InterActionPresenter {
                         if (response.body != null) {
                             boolean hasLiked = response.body.getBoolean("hasLiked").booleanValue();
                             feed.getUgc().setHasLiked(hasLiked);
+                            LiveDataBus.get().with(DATA_FROM_INTERACTION)
+                                    .postValue(feed);
                         }
                     }
 
@@ -211,6 +216,8 @@ public class InterActionPresenter {
                         if (response.body != null) {
                             boolean hasFavorite = response.body.getBooleanValue("hasFavorite");
                             feed.getUgc().setHasFavorite(hasFavorite);
+                            LiveDataBus.get().with(DATA_FROM_INTERACTION)
+                                    .postValue(feed);
                         }
                     }
 
@@ -244,6 +251,8 @@ public class InterActionPresenter {
                         if (response.body != null) {
                             boolean hasFollow = response.body.getBooleanValue("hasLiked");
                             feed.getAuthor().setHasFollow(hasFollow);
+                            LiveDataBus.get().with(DATA_FROM_INTERACTION)
+                                    .postValue(feed);
                         }
                     }
 
