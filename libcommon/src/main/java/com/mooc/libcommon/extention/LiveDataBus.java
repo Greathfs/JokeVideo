@@ -14,6 +14,33 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class LiveDataBus {
 
+    //
+//    Handler mHandler = new Handler(Looper.getMainLooper()){
+//        @Override
+//        public void handleMessage(@NonNull Message msg) {
+//            super.handleMessage(msg);
+//        }
+//    };
+//    mHandler.sendMessage(msg)
+
+    //正常的事件
+    // LiveData mLiveData=null;
+    // mLiveData.observer(this,new Observer<User>){
+    //        void onChanged(User user){
+    //
+    //        }
+    //    }
+    //mLiveData.postValue(data);
+
+    //黏性事件。先发送。后注册监听
+//    LiveData mLiveData=null;
+//    mLiveData.postValue(data);
+//    mLiveData.observer(this,new Observer<User>){
+//        void onChanged(User user){
+//
+//        }
+//    }
+
     private static class Lazy {
         static LiveDataBus sLiveDataBus = new LiveDataBus();
     }
