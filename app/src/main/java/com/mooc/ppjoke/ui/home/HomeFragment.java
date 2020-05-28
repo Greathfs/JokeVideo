@@ -11,20 +11,17 @@ import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 
-import com.mooc.ppjoke.datasource.MutablePageKeyedDataSource;
+import com.mooc.libnavannotation.FragmentDestination;
 import com.mooc.ppjoke.exoplayer.PageListPlayDetector;
 import com.mooc.ppjoke.exoplayer.PageListPlayManager;
 import com.mooc.ppjoke.model.Feed;
-import com.mooc.ppjoke.ui.base.AbsListFragment;
-import com.mooc.libnavannotation.FragmentDestination;
+import com.mooc.ppjoke.ui.AbsListFragment;
+import com.mooc.ppjoke.ui.MutablePageKeyedDataSource;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import java.util.List;
 
-/**
- * 首页
- */
-@FragmentDestination(pageUrl = "main/tabs/home" ,asStarter = true)
+@FragmentDestination(pageUrl = "main/tabs/home", asStarter = true)
 public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     private PageListPlayDetector playDetector;
     private String feedType;
@@ -87,12 +84,12 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        final PagedList<Feed> currentList = mAdapter.getCurrentList();
+        final PagedList<Feed> currentList = adapter.getCurrentList();
         if (currentList == null || currentList.size() <= 0) {
             finishRefresh(false);
             return;
         }
-        Feed feed = currentList.get(mAdapter.getItemCount() - 1);
+        Feed feed = currentList.get(adapter.getItemCount() - 1);
         mViewModel.loadAfter(feed.id, new ItemKeyedDataSource.LoadCallback<Feed>() {
             @Override
             public void onResult(@NonNull List<Feed> data) {
@@ -138,6 +135,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
         if (shouldPause) {
             playDetector.onPause();
         }
+        Log.e("homefragment", "onPause: feedtype:" + feedType);
         super.onPause();
     }
 
@@ -150,10 +148,12 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
         //当且仅当 它和它的ParentFragment均可见的时候，才能恢复视频播放
         if (getParentFragment() != null) {
             if (getParentFragment().isVisible() && isVisible()) {
+                Log.e("homefragment", "onResume: feedtype:" + feedType);
                 playDetector.onResume();
             }
         } else {
             if (isVisible()) {
+                Log.e("homefragment", "onResume: feedtype:" + feedType);
                 playDetector.onResume();
             }
         }

@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DiffUtil;
@@ -18,7 +20,10 @@ import com.mooc.libcommon.extention.AbsPagedListAdapter;
 import com.mooc.libcommon.utils.PixUtils;
 import com.mooc.ppjoke.databinding.LayoutFeedCommentListItemBinding;
 import com.mooc.ppjoke.model.Comment;
+import com.mooc.ppjoke.ui.InteractionPresenter;
+import com.mooc.ppjoke.ui.MutableItemKeyedDataSource;
 import com.mooc.ppjoke.ui.login.UserManager;
+import com.mooc.ppjoke.ui.publish.PreviewActivity;
 
 public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedCommentAdapter.ViewHolder> {
     private LayoutInflater mInflater;
@@ -50,13 +55,51 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
     protected void onBindViewHolder2(ViewHolder holder, int position) {
         Comment item = getItem(position);
         holder.bindData(item);
-        holder.mBinding.commentDelete.setOnClickListener(v -> {
-
-                }
-        );
+        holder.mBinding.commentDelete.setOnClickListener(v ->
+                InteractionPresenter.deleteFeedComment(mContext, item.itemId, item.commentId)
+                        .observe((LifecycleOwner) mContext, success -> {
+                            if (success) {
+                                deleteAndRefreshList(item);
+                            }
+                        }));
         holder.mBinding.commentCover.setOnClickListener(v -> {
+            boolean isVideo = item.commentType == Comment.COMMENT_TYPE_VIDEO;
+            PreviewActivity.startActivityForResult((Activity) mContext, isVideo ? item.videoUrl : item.imageUrl, isVideo, null);
         });
 
+    }
+
+    public void deleteAndRefreshList(Comment item) {
+        MutableItemKeyedDataSource<Integer, Comment> dataSource = new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) getCurrentList().getDataSource()) {
+            @NonNull
+            @Override
+            public Integer getKey(@NonNull Comment item) {
+                return item.id;
+            }
+        };
+        PagedList<Comment> currentList = getCurrentList();
+        for (Comment comment : currentList) {
+            if (comment != item) {
+                dataSource.data.add(comment);
+            }
+        }
+        PagedList<Comment> pagedList = dataSource.buildNewPagedList(getCurrentList().getConfig());
+        submitList(pagedList);
+    }
+
+    public void addAndRefreshList(Comment comment) {
+        PagedList<Comment> currentList = getCurrentList();
+        MutableItemKeyedDataSource<Integer, Comment> mutableItemKeyedDataSource = new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) currentList.getDataSource()) {
+            @NonNull
+            @Override
+            public Integer getKey(@NonNull Comment item) {
+                return item.id;
+            }
+        };
+        mutableItemKeyedDataSource.data.add(comment);
+        mutableItemKeyedDataSource.data.addAll(currentList);
+        PagedList<Comment> pagedList = mutableItemKeyedDataSource.buildNewPagedList(currentList.getConfig());
+        submitList(pagedList);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,7 +112,7 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
 
         public void bindData(Comment item) {
             mBinding.setComment(item);
-            boolean self = item.author != null && UserManager.get().getUserId() == item.author.userId;
+            boolean self = item.author == null ? false : UserManager.get().getUserId() == item.author.userId;
             mBinding.labelAuthor.setVisibility(self ? View.VISIBLE : View.GONE);
             mBinding.commentDelete.setVisibility(self ? View.VISIBLE : View.GONE);
             if (!TextUtils.isEmpty(item.imageUrl)) {

@@ -1,8 +1,7 @@
-package com.mooc.libcommon.view;
+package com.mooc.ppjoke.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -12,16 +11,17 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mooc.libcommon.utils.PixUtils;
+import com.mooc.libcommon.view.ViewHelper;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -35,7 +35,6 @@ public class PPImageView extends AppCompatImageView {
         super(context, attrs);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PPImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         ViewHelper.setViewOutline(this, attrs, defStyleAttr, 0);
@@ -118,7 +117,7 @@ public class PPImageView extends AppCompatImageView {
     }
 
     @BindingAdapter(value = {"blur_url", "radius"})
-    public static void setBlurImageUrl(final ImageView imageView, String blurUrl, int radius) {
+    public static void setBlurImageUrl(ImageView imageView, String blurUrl, int radius) {
         Glide.with(imageView).load(blurUrl).override(radius)
                 .transform(new BlurTransformation())
                 .dontAnimate()

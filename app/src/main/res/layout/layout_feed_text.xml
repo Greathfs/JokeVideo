@@ -12,9 +12,9 @@
             name="lines"
             type="java.lang.Integer" />
 
-        <import type="android.text.TextUtils"/>
+        <import type="android.text.TextUtils"></import>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View"></import>
     </data>
 
     <TextView

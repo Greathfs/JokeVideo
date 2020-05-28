@@ -5,11 +5,25 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
+    <activity></activity>
+    <dialog ></dialog>
+
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.mooc.ppjoke.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <argument
+            android:name="arg1"
+            app:argType="string"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_id"
+            app:destination="@id/navigation_dashboard" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="www.mooc.com" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"

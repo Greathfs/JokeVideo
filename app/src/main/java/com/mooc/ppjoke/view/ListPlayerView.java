@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -16,19 +17,17 @@ import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.mooc.ppjoke.R;
 import com.mooc.libcommon.utils.PixUtils;
-import com.mooc.libcommon.view.PPImageView;
+import com.mooc.ppjoke.R;
 import com.mooc.ppjoke.exoplayer.IPlayTarget;
 import com.mooc.ppjoke.exoplayer.PageListPlay;
 import com.mooc.ppjoke.exoplayer.PageListPlayManager;
 
 /**
- * 列表播放使用
+ * 列表视频播放专用
  */
 public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerControlView.VisibilityListener, Player.EventListener {
     public View bufferView;
@@ -36,20 +35,24 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     protected ImageView playBtn;
     protected String mCategory;
     protected String mVideoUrl;
+    protected boolean isPlaying;
     protected int mWidthPx;
     protected int mHeightPx;
-    protected boolean isPlaying;
 
     public ListPlayerView(@NonNull Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public ListPlayerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public ListPlayerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this(context, attrs, defStyleAttr, 0);
+    }
+
+    public ListPlayerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
         LayoutInflater.from(context).inflate(R.layout.layout_player_view, this, true);
 
         //缓冲转圈圈的view
@@ -64,10 +67,20 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         playBtn.setOnClickListener(v -> {
             if (isPlaying()) {
                 inActive();
-            }else {
+            } else {
                 onActive();
             }
         });
+
+        this.setTransitionName("listPlayerView");
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //点击该区域时 我们诸主动让视频控制器显示出来
+        PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
+        pageListPlay.controlView.show();
+        return true;
     }
 
     public void bindData(String category, int widthPx, int heightPx, String coverUrl, String videoUrl) {
@@ -125,6 +138,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         playBtnParams.gravity = Gravity.CENTER;
         playBtn.setLayoutParams(playBtnParams);
 
+
     }
 
     @Override
@@ -135,6 +149,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     @Override
     public void onActive() {
         //视频播放,或恢复播放
+
         //通过该View所在页面的mCategory(比如首页列表tab_all,沙发tab的tab_video,标签帖子聚合的tag_feed) 字段，
         //取出管理该页面的Exoplayer播放器，ExoplayerView播放View,控制器对象PageListPlay
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
@@ -188,15 +203,26 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         controlView.setVisibilityListener(this);
         exoPlayer.addListener(this);
         exoPlayer.setPlayWhenReady(true);
+
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        isPlaying = false;
+        bufferView.setVisibility(GONE);
+        cover.setVisibility(VISIBLE);
+        playBtn.setVisibility(VISIBLE);
+        playBtn.setImageResource(R.drawable.icon_video_play);
     }
 
     @Override
     public void inActive() {
+
         //暂停视频的播放并让封面图和 开始播放按钮 显示出来
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
-        if (pageListPlay.exoPlayer == null || pageListPlay.controlView == null) {
+        if (pageListPlay.exoPlayer == null || pageListPlay.controlView == null || pageListPlay.exoPlayer == null)
             return;
-        }
         pageListPlay.exoPlayer.setPlayWhenReady(false);
         pageListPlay.controlView.setVisibilityListener(null);
         pageListPlay.exoPlayer.removeListener(this);
@@ -208,16 +234,6 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     @Override
     public boolean isPlaying() {
         return isPlaying;
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        isPlaying = false;
-        bufferView.setVisibility(GONE);
-        cover.setVisibility(VISIBLE);
-        playBtn.setVisibility(VISIBLE);
-        playBtn.setImageResource(R.drawable.icon_video_play);
     }
 
     @Override

@@ -8,19 +8,10 @@ import androidx.databinding.Bindable;
 
 import java.io.Serializable;
 
-/**
- * 帖子
- */
 public class Feed extends BaseObservable implements Serializable {
-    /**
-     * 图文
-     */
-    public static final int TYPE_IMAGE_TEXT = 1;
-    /**
-     * 视频
-     */
-    public static final int TYPE_VIDEO = 2;
 
+    public static final int TYPE_IMAGE_TEXT = 1;//图文
+    public static final int TYPE_VIDEO = 2;//视频
     /**
      * id : 364
      * itemId : 6739143063064549000
@@ -52,33 +43,22 @@ public class Feed extends BaseObservable implements Serializable {
     public String url;
     public String cover;
 
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
     public User author;
     public Comment topComment;
+    public Ugc ugc;
 
     @Bindable
     public Ugc getUgc() {
-        return ugc;
-    }
-
-    public void setUgc(Ugc ugc) {
         if (ugc == null) {
             ugc = new Ugc();
         }
-        this.ugc = ugc;
+        return ugc;
     }
 
-    public Ugc ugc;
-
-
-
+    @Bindable
+    public User getAuthor() {
+        return author;
+    }
 
     @Override
     public boolean equals(@Nullable Object obj) {
@@ -102,4 +82,6 @@ public class Feed extends BaseObservable implements Serializable {
                 && (topComment != null && topComment.equals(newFeed.topComment))
                 && (ugc != null && ugc.equals(newFeed.ugc));
     }
+
+
 }

@@ -1,6 +1,8 @@
 package com.mooc.ppjoke.ui;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
@@ -12,6 +14,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mooc.libcommon.extention.LiveDataBus;
 import com.mooc.libcommon.global.AppGlobals;
@@ -20,13 +23,16 @@ import com.mooc.libnetwork.ApiService;
 import com.mooc.libnetwork.JsonCallback;
 import com.mooc.ppjoke.model.Comment;
 import com.mooc.ppjoke.model.Feed;
+import com.mooc.ppjoke.model.TagList;
 import com.mooc.ppjoke.model.User;
 import com.mooc.ppjoke.ui.login.UserManager;
 import com.mooc.ppjoke.ui.share.ShareDialog;
 
 import org.jetbrains.annotations.NotNull;
 
-public class InterActionPresenter {
+import java.util.Date;
+
+public class InteractionPresenter {
 
     public static final String DATA_FROM_INTERACTION = "data_from_interaction";
 
@@ -38,25 +44,17 @@ public class InterActionPresenter {
 
     private static final String URL_TOGGLE_COMMENT_LIKE = "/ugc/toggleCommentLike";
 
-    /**
-     * 给一个帖子点赞/取消点赞，它和给帖子点踩一踩是互斥的
-     */
+    //给一个帖子点赞/取消点赞，它和给帖子点踩一踩是互斥的
     public static void toggleFeedLike(LifecycleOwner owner, Feed feed) {
-
-        if (!UserManager.get().isLogin()) {
-            LiveData<User> loginLiveData = UserManager.get().login(AppGlobals.getApplication());
-            loginLiveData.observe(owner, new Observer<User>() {
-                @Override
-                public void onChanged(User user) {
-                    if (user != null) {
-                        toggleFeedLikeInternal(feed);
-                    }
-                    loginLiveData.removeObserver(this);
-                }
-            });
-            return;
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleFeedLikeInternal(feed);
+            }
+        })) {
+        } else {
+            toggleFeedLikeInternal(feed);
         }
-        toggleFeedLikeInternal(feed);
     }
 
     private static void toggleFeedLikeInternal(Feed feed) {
@@ -85,20 +83,15 @@ public class InterActionPresenter {
      * 给一个帖子点踩一踩/取消踩一踩,它和给帖子点赞是互斥的
      */
     public static void toggleFeedDiss(LifecycleOwner owner, Feed feed) {
-        if (!UserManager.get().isLogin()) {
-            LiveData<User> loginLiveData = UserManager.get().login(AppGlobals.getApplication());
-            loginLiveData.observe(owner, new Observer<User>() {
-                @Override
-                public void onChanged(User user) {
-                    if (user != null) {
-                        toggleFeedDissInternal(feed);
-                    }
-                    loginLiveData.removeObserver(this);
-                }
-            });
-            return;
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleFeedDissInternal(feed);
+            }
+        })) {
+        } else {
+            toggleFeedDissInternal(feed);
         }
-        toggleFeedDissInternal(feed);
     }
 
     private static void toggleFeedDissInternal(Feed feed) {
@@ -120,9 +113,7 @@ public class InterActionPresenter {
                 });
     }
 
-    /**
-     * 打开分享面板
-     */
+    //打开分享面板
     public static void openShare(Context context, Feed feed) {
         String shareContent = feed.feeds_text;
         if (!TextUtils.isEmpty(feed.url)) {
@@ -192,7 +183,6 @@ public class InterActionPresenter {
                 });
     }
 
-
     //收藏/取消收藏一个帖子
     public static void toggleFeedFavorite(LifecycleOwner owner, Feed feed) {
         if (!isLogin(owner, new Observer<User>() {
@@ -227,6 +217,7 @@ public class InterActionPresenter {
                     }
                 });
     }
+
 
     //关注/取消关注一个用户
     public static void toggleFollowUser(LifecycleOwner owner, Feed feed) {
@@ -327,6 +318,48 @@ public class InterActionPresenter {
     }
 
 
+    //关注/取消关注一个帖子标签
+    public static void toggleTagLike(LifecycleOwner owner, TagList tagList) {
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleTagLikeInternal(tagList);
+            }
+        })) ;
+        else {
+            toggleTagLikeInternal(tagList);
+        }
+    }
+
+    private static void toggleTagLikeInternal(TagList tagList) {
+        ApiService.get("/tag/toggleTagFollow")
+                .addParam("tagId", tagList.tagId)
+                .addParam("userId", UserManager.get().getUserId())
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            Boolean follow = response.body.getBoolean("hasFollow");
+                            tagList.setHasFollow(follow);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    private static void showToast(String message) {
+        ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(AppGlobals.getApplication(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private static boolean isLogin(LifecycleOwner owner, Observer<User> observer) {
         if (UserManager.get().isLogin()) {
             return true;
@@ -354,12 +387,4 @@ public class InterActionPresenter {
         };
     }
 
-    private static void showToast(String message) {
-        ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(AppGlobals.getApplication(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 }

@@ -16,9 +16,6 @@ import androidx.annotation.Nullable;
 
 import com.mooc.libcommon.R;
 
-/**
- * 空布局
- */
 public class EmptyView extends LinearLayout {
     private ImageView icon;
     private TextView title;

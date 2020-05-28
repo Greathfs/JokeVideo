@@ -4,22 +4,21 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.mooc.ppjoke.R;
 import com.mooc.libnavannotation.FragmentDestination;
 import com.mooc.ppjoke.databinding.FragmentSofaBinding;
 import com.mooc.ppjoke.model.SofaTab;
@@ -27,12 +26,12 @@ import com.mooc.ppjoke.ui.home.HomeFragment;
 import com.mooc.ppjoke.utils.AppConfig;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * 沙发
- */
-@FragmentDestination(pageUrl = "main/tabs/sofa" ,asStarter = false)
+
+@FragmentDestination(pageUrl = "main/tabs/sofa", asStarter = false)
 public class SofaFragment extends Fragment {
     private FragmentSofaBinding binding;
     protected ViewPager2 viewPager2;
@@ -40,9 +39,9 @@ public class SofaFragment extends Fragment {
     private SofaTab tabConfig;
     private ArrayList<SofaTab.Tabs> tabs;
 
+    //private Map<Integer, Fragment> mFragmentMap = new HashMap<>();
     private TabLayoutMediator mediator;
 
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -70,6 +69,11 @@ public class SofaFragment extends Fragment {
             @NonNull
             @Override
             public Fragment createFragment(int position) {
+//                Fragment fragment = mFragmentMap.get(position);
+//                if (fragment == null) {
+//                    fragment = getTabFragment(position);
+//                    mFragmentMap.put(position, fragment);
+//                }
                 //这里不需要自己保管了,FragmentStateAdapter内部自己会管理已实例化的fragment对象。
                 return getTabFragment(position);
             }

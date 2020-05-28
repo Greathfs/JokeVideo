@@ -8,7 +8,7 @@
             name="feed"
             type="com.mooc.ppjoke.model.Feed" />
 
-        <import type="com.mooc.libcommon.utils.PixUtils"/>
+        <import type="com.mooc.libcommon.utils.PixUtils"></import>
     </data>
 
     <LinearLayout
@@ -21,28 +21,28 @@
             layout="@layout/layout_feed_detail_author_info"
             app:feed="@{feed}"
             app:fullscreen="@{false}"
-            app:leftMargin="@{PixUtils.dp2px(16)}"/>
+            app:leftMargin="@{PixUtils.dp2px(16)}"></include>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_10"/>
+            android:layout_height="@dimen/dp_10"></View>
 
         <include
             layout="@layout/layout_feed_text"
             app:feedText="@{feed.feeds_text}"
-            app:lines="@{1000}"/>
+            app:lines="@{1000}"></include>
 
-        <com.mooc.libcommon.view.PPImageView
+        <com.mooc.ppjoke.view.PPImageView
             android:id="@+id/header_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_10"/>
+            android:layout_marginBottom="@dimen/dp_10"></com.mooc.ppjoke.view.PPImageView>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_10"
             android:layout_marginTop="6dp"
-            android:background="@color/color_divider"/>
+            android:background="@color/color_divider"></View>
 
     </LinearLayout>
 </layout>

@@ -12,7 +12,7 @@
             name="lifeCycleOwner"
             type="androidx.lifecycle.LifecycleOwner" />
 
-        <import type="com.mooc.ppjoke.model.Feed"/>
+        <import type="com.mooc.ppjoke.model.Feed"></import>
 
     </data>
 
@@ -26,33 +26,33 @@
 
         <include
             layout="@layout/layout_feed_author"
-            app:user="@{feed.author}"/>
+            app:user="@{feed.author}"></include>
 
         <include
             layout="@layout/layout_feed_text"
             app:lines="@{3}"
-            app:feedText="@{feed.feeds_text}"/>
+            app:feedText="@{feed.feeds_text}"></include>
 
 
         <!--   图片区域-->
-        <com.mooc.libcommon.view.PPImageView
+        <com.mooc.ppjoke.view.PPImageView
             android:id="@+id/feed_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_10"/>
+            android:layout_marginBottom="@dimen/dp_10"></com.mooc.ppjoke.view.PPImageView>
 
         <include
             layout="@layout/layout_feed_tag"
-            app:tagText="@{feed.activityText}"/>
+            app:tagText="@{feed.activityText}"></include>
 
         <include
             layout="@layout/layout_feed_top_comment"
-            app:comment="@{feed.topComment}"/>
+            app:comment="@{feed.topComment}"></include>
 
         <include
             android:id="@+id/interaction_binding"
             layout="@layout/layout_feed_interaction"
             app:lifeCycleOwner="@{lifeCycleOwner}"
-            app:feed="@{feed}"/>
+            app:feed="@{feed}"></include>
     </LinearLayout>
 </layout>

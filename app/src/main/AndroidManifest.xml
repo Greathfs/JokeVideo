@@ -41,13 +41,29 @@
 
         <activity
             android:name=".ui.publish.PublishActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".ui.login.LoginActivity"/>
-
-        <activity android:name=".ui.detail.FeedDetailActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.publish.CaptureActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/feedDetail"/>
+            android:theme="@style/capture"></activity>
+
+        <activity
+            android:name=".ui.publish.PreviewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/preview"></activity>
+
+        <activity android:name=".ui.login.LoginActivity"></activity>
+
+        <activity
+            android:name=".ui.detail.FeedDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/feedDetail"></activity>
+
+        <activity android:name=".ui.find.TagFeedListActivity"></activity>
+
+        <activity android:name=".ui.my.ProfileActivity"></activity>
+
+        <activity android:name=".ui.my.UserBehaviorListActivity"></activity>
 
 
         <!-- 注册SDKActivity -->

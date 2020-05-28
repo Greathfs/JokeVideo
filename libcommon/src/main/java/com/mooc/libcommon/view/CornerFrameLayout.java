@@ -1,4 +1,4 @@
-package com.mooc.ppjoke.view;
+package com.mooc.libcommon.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,8 +6,6 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.mooc.libcommon.view.ViewHelper;
 
 public class CornerFrameLayout extends FrameLayout {
     public CornerFrameLayout(@NonNull Context context) {

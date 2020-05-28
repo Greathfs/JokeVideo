@@ -21,7 +21,7 @@ import com.mooc.ppjoke.R;
 import com.mooc.ppjoke.databinding.LayoutFeedTypeImageBinding;
 import com.mooc.ppjoke.databinding.LayoutFeedTypeVideoBinding;
 import com.mooc.ppjoke.model.Feed;
-import com.mooc.ppjoke.ui.InterActionPresenter;
+import com.mooc.ppjoke.ui.InteractionPresenter;
 import com.mooc.ppjoke.ui.detail.FeedDetailActivity;
 import com.mooc.ppjoke.view.ListPlayerView;
 
@@ -80,13 +80,12 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
                 if (mFeedObserver == null) {
                     mFeedObserver = new FeedObserver();
                     LiveDataBus.get()
-                            .with(InterActionPresenter.DATA_FROM_INTERACTION)
+                            .with(InteractionPresenter.DATA_FROM_INTERACTION)
                             .observe((LifecycleOwner) mContext, mFeedObserver);
                 }
                 mFeedObserver.setFeed(feed);
             }
         });
-
     }
 
     public void onStartFeedDetailActivity(Feed feed) {
@@ -101,9 +100,8 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
 
         @Override
         public void onChanged(Feed newOne) {
-            if (mFeed.id != newOne.id) {
+            if (mFeed.id != newOne.id)
                 return;
-            }
             mFeed.author = newOne.author;
             mFeed.ugc = newOne.ugc;
             mFeed.notifyChange();
@@ -137,10 +135,14 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
                 LayoutFeedTypeImageBinding imageBinding = (LayoutFeedTypeImageBinding) mBinding;
                 feedImage = imageBinding.feedImage;
                 imageBinding.feedImage.bindData(item.width, item.height, 16, item.cover);
+                //imageBinding.setFeed(item);
+                //imageBinding.interactionBinding.setLifeCycleOwner((LifecycleOwner) mContext);
             } else if (mBinding instanceof LayoutFeedTypeVideoBinding) {
                 LayoutFeedTypeVideoBinding videoBinding = (LayoutFeedTypeVideoBinding) mBinding;
                 videoBinding.listPlayerView.bindData(mCategory, item.width, item.height, item.cover, item.url);
                 listPlayerView = videoBinding.listPlayerView;
+                //videoBinding.setFeed(item);
+                //videoBinding.interactionBinding.setLifeCycleOwner((LifecycleOwner) mContext);
             }
         }
 

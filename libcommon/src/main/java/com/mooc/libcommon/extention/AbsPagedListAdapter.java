@@ -48,9 +48,7 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
     // 移除头部
     public void removeHeaderView(View view) {
         int index = mHeaders.indexOfValue(view);
-        if (index < 0) {
-            return;
-        }
+        if (index < 0) return;
         mHeaders.removeAt(index);
         notifyDataSetChanged();
     }
@@ -58,9 +56,7 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
     // 移除底部
     public void removeFooterView(View view) {
         int index = mFooters.indexOfValue(view);
-        if (index < 0) {
-            return;
-        }
+        if (index < 0) return;
         mFooters.removeAt(index);
         notifyDataSetChanged();
     }
@@ -134,9 +130,8 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-        if (isHeaderPosition(position) || isFooterPosition(position)) {
+        if (isHeaderPosition(position) || isFooterPosition(position))
             return;
-        }
         //列表中正常类型的itemView的 position 咱们需要减去添加headerView的个数
         position = position - mHeaders.size();
         onBindViewHolder2(holder, position);
@@ -182,32 +177,26 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
             mObserver = observer;
         }
 
-        @Override
         public void onChanged() {
             mObserver.onChanged();
         }
 
-        @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
             mObserver.onItemRangeChanged(positionStart + mHeaders.size(), itemCount);
         }
 
-        @Override
         public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
             mObserver.onItemRangeChanged(positionStart + mHeaders.size(), itemCount, payload);
         }
 
-        @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
             mObserver.onItemRangeInserted(positionStart + mHeaders.size(), itemCount);
         }
 
-        @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
             mObserver.onItemRangeRemoved(positionStart + mHeaders.size(), itemCount);
         }
 
-        @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
             mObserver.onItemRangeMoved(fromPosition + mHeaders.size(), toPosition + mHeaders.size(), itemCount);
         }

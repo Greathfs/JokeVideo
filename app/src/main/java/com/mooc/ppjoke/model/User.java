@@ -6,12 +6,12 @@ import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.mooc.ppjoke.BR;
+
 import java.io.Serializable;
 
-/**
- * 作者信息
- */
 public class User extends BaseObservable implements Serializable {
+
     /**
      * id : 962
      * userId : 3223400206308231
@@ -50,17 +50,6 @@ public class User extends BaseObservable implements Serializable {
     public int feedCount;
     public boolean hasFollow;
 
-
-    @Bindable
-    public boolean isHasFollow() {
-        return hasFollow;
-    }
-
-    public void setHasFollow(boolean hasFollow) {
-        this.hasFollow = hasFollow;
-        notifyPropertyChanged(com.mooc.ppjoke.BR._all);
-    }
-
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || !(obj instanceof Feed))
@@ -81,5 +70,15 @@ public class User extends BaseObservable implements Serializable {
                 && favoriteCount == newUser.favoriteCount
                 && feedCount == newUser.feedCount
                 && hasFollow == newUser.hasFollow;
+    }
+
+    @Bindable
+    public boolean isHasFollow() {
+        return hasFollow;
+    }
+
+    public void setHasFollow(boolean hasFollow) {
+        this.hasFollow = hasFollow;
+        notifyPropertyChanged(com.mooc.ppjoke.BR._all);
     }
 }

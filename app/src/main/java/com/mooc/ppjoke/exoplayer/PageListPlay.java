@@ -14,7 +14,6 @@ import com.mooc.libcommon.global.AppGlobals;
 import com.mooc.ppjoke.R;
 
 public class PageListPlay {
-
     public SimpleExoPlayer exoPlayer;
     public PlayerView playerView;
     public PlayerControlView controlView;
@@ -22,7 +21,14 @@ public class PageListPlay {
 
     public PageListPlay() {
         Application application = AppGlobals.getApplication();
-        exoPlayer = ExoPlayerFactory.newSimpleInstance(application, new DefaultRenderersFactory(application), new DefaultTrackSelector(), new DefaultLoadControl());
+        //创建exoplayer播放器实例
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(application,
+                //视频每一这的画面如何渲染,实现默认的实现类
+                new DefaultRenderersFactory(application),
+                //视频的音视频轨道如何加载,使用默认的轨道选择器
+                new DefaultTrackSelector(),
+                //视频缓存控制逻辑,使用默认的即可
+                new DefaultLoadControl());
 
         //加载咱们布局层级优化之后的能够展示视频画面的View
         playerView = (PlayerView) LayoutInflater.from(application).inflate(R.layout.layout_exo_player_view, null, false);

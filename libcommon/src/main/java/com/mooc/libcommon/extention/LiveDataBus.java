@@ -9,12 +9,9 @@ import androidx.lifecycle.Observer;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * LiveData实现事件总线
- */
 public class LiveDataBus {
 
-    //
+//
 //    Handler mHandler = new Handler(Looper.getMainLooper()){
 //        @Override
 //        public void handleMessage(@NonNull Message msg) {

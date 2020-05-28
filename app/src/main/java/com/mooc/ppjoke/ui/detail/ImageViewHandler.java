@@ -6,18 +6,18 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mooc.libcommon.view.PPImageView;
 import com.mooc.ppjoke.R;
 import com.mooc.ppjoke.databinding.ActivityFeedDetailTypeImageBinding;
 import com.mooc.ppjoke.databinding.LayoutFeedDetailTypeImageHeaderBinding;
 import com.mooc.ppjoke.model.Feed;
+import com.mooc.ppjoke.view.PPImageView;
 
 public class ImageViewHandler extends ViewHandler {
 
     protected ActivityFeedDetailTypeImageBinding mImageBinding;
+
     protected LayoutFeedDetailTypeImageHeaderBinding mHeaderBinding;
 
     public ImageViewHandler(FragmentActivity activity) {
@@ -25,6 +25,14 @@ public class ImageViewHandler extends ViewHandler {
         mImageBinding = DataBindingUtil.setContentView(activity, R.layout.activity_feed_detail_type_image);
         mInateractionBinding = mImageBinding.interactionLayout;
         mRecyclerView = mImageBinding.recyclerView;
+
+        mImageBinding.actionClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.finish();
+            }
+        });
+
     }
 
     @Override
@@ -37,7 +45,7 @@ public class ImageViewHandler extends ViewHandler {
 
         PPImageView headerImage = mHeaderBinding.headerImage;
         headerImage.bindData(mFeed.width, mFeed.height, mFeed.width > mFeed.height ? 0 : 16, mFeed.cover);
-        mListAdapter.addHeaderView(mHeaderBinding.getRoot());
+        listAdapter.addHeaderView(mHeaderBinding.getRoot());
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -49,5 +57,6 @@ public class ImageViewHandler extends ViewHandler {
 
             }
         });
+        handleEmpty(false);
     }
 }

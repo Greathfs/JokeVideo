@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_30"
-        android:src="@drawable/icon_close"/>
+        android:src="@drawable/icon_close"></ImageView>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/dp_60"
-        android:src="@mipmap/icon_jetpack"/>
+        android:src="@mipmap/icon_jetpack"></ImageView>
 
 
     <com.google.android.material.button.MaterialButton
@@ -35,5 +35,5 @@
         android:textColor="@color/color_white"
         android:textSize="@dimen/sp_16"
         app:backgroundTint="@color/color_theme"
-        app:cornerRadius="25dp"/>
+        app:cornerRadius="25dp"></com.google.android.material.button.MaterialButton>
 </FrameLayout>

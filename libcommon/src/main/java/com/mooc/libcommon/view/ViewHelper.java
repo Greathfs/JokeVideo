@@ -3,12 +3,9 @@ package com.mooc.libcommon.view;
 import android.annotation.TargetApi;
 import android.content.res.TypedArray;
 import android.graphics.Outline;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
-
-import androidx.annotation.RequiresApi;
 
 import com.mooc.libcommon.R;
 
@@ -20,7 +17,6 @@ public class ViewHelper {
     public static final int RADIUS_RIGHT = 3;
     public static final int RADIUS_BOTTOM = 4;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void setViewOutline(View view, AttributeSet attributes, int defStyleAttr, int defStyleRes) {
         TypedArray array = view.getContext().obtainStyledAttributes(attributes, R.styleable.viewOutLineStrategy, defStyleAttr, defStyleRes);
         int radius = array.getDimensionPixelSize(R.styleable.viewOutLineStrategy_clip_radius, 0);
@@ -29,7 +25,6 @@ public class ViewHelper {
         setViewOutline(view, radius, hideSide);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void setViewOutline(View owner, final int radius, final int radiusSide) {
         owner.setOutlineProvider(new ViewOutlineProvider() {
             @Override

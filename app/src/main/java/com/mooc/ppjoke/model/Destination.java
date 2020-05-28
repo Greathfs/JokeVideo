@@ -1,8 +1,5 @@
 package com.mooc.ppjoke.model;
 
-/**
- * Tab节点
- */
 public class Destination {
     public String pageUrl;
     public int id;

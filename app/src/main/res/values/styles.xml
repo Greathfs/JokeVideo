@@ -18,19 +18,18 @@
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
-    <style name="feedDetail" parent="AppTheme">
+    <style name="preview" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
     </style>
 
 
-    <style name="active" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/color_000</item>
+    <style name="feedDetail" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="inActive" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/color_999</item>
+    <style name="capture" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/black</item>
     </style>
 
     <style name="materialButton" parent="Widget.MaterialComponents.Button">
@@ -46,5 +45,37 @@
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:elevation">0dp</item>
+    </style>
+
+
+    <declare-styleable name="view_offset_behavior">
+        <attr name="anchor_gravity" format="enum">
+            <enum name="left" value="0"></enum>
+            <enum name="top" value="1"></enum>
+            <enum name="right" value="2"></enum>
+            <enum name="bottom" value="3"></enum>
+        </attr>
+        <attr name="scroll_follow" format="boolean" />
+        <attr name="anchor_id" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="view_anchor_behavior">
+        <attr name="anchorId" format="integer"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="view_zoom_behavior">
+        <attr name="min_height" format="dimension"></attr>
+        <attr name="scrolling_id" format="integer"></attr>
+    </declare-styleable>
+
+
+    <style name="active" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_000</item>
+    </style>
+
+    <style name="inActive" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_999</item>
     </style>
 </resources>

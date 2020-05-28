@@ -19,21 +19,21 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mooc.ppjoke.view.PPImageView;
 import com.mooc.libcommon.utils.PixUtils;
-import com.mooc.libcommon.view.PPImageView;
+import com.mooc.libcommon.view.CornerFrameLayout;
 import com.mooc.libcommon.view.ViewHelper;
 import com.mooc.ppjoke.R;
-import com.mooc.ppjoke.view.CornerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShareDialog extends AlertDialog {
+
     List<ResolveInfo> shareitems = new ArrayList<>();
     private ShareAdapter shareAdapter;
     private String shareContent;

@@ -2,9 +2,6 @@ package com.mooc.ppjoke.model;
 
 import java.util.List;
 
-/**
- * 自定义底部导航
- */
 public class BottomBar {
 
     /**
@@ -16,10 +13,7 @@ public class BottomBar {
     public String activeColor;
     public String inActiveColor;
     public List<Tab> tabs;
-    /**
-     * 底部导航栏默认选中项
-     */
-    public int selectTab;
+    public int selectTab;//底部导航栏默认选中项
 
     public static class Tab {
         /**

@@ -1,14 +1,13 @@
 package com.mooc.ppjoke.model;
 
 import androidx.annotation.Nullable;
+import androidx.databinding.BaseObservable;
 
 import java.io.Serializable;
 
-/**
- * 评论
- */
-public class Comment implements Serializable {
-
+public class Comment extends BaseObservable implements Serializable {
+    public static final int COMMENT_TYPE_VIDEO = 3;
+    public static final int COMMENT_TYPE_IMAGE_TEXT = 2;
     /**
      * id : 784
      * itemId : 6739143063064549000

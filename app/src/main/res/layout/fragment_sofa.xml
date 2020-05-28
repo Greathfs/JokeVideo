@@ -24,12 +24,12 @@
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/color_theme"
             app:tabTextColor="@color/color_333"
-            app:tabUnboundedRipple="true" />
+            app:tabUnboundedRipple="true"></com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal" />
+            android:orientation="horizontal"></androidx.viewpager2.widget.ViewPager2>
     </LinearLayout>
 </layout>

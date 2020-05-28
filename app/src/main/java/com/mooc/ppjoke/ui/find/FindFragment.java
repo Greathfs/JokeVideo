@@ -1,42 +1,41 @@
 package com.mooc.ppjoke.ui.find;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.text.TextUtils;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.mooc.ppjoke.R;
 import com.mooc.libnavannotation.FragmentDestination;
+import com.mooc.ppjoke.model.SofaTab;
+import com.mooc.ppjoke.ui.sofa.SofaFragment;
+import com.mooc.ppjoke.utils.AppConfig;
 
-/**
- * 发现
- */
-@FragmentDestination(pageUrl = "main/tabs/find", asStarter = false)
-public class FindFragment extends Fragment {
-    private static final String TAG = "FindFragment";
 
-    private FindViewModel mFindViewModel;
+@FragmentDestination(pageUrl = "main/tabs/find")
+public class FindFragment extends SofaFragment {
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        mFindViewModel =
-                ViewModelProviders.of(this).get(FindViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_find, container, false);
-        final TextView textView = root.findViewById(R.id.text_find);
-        mFindViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+    public Fragment getTabFragment(int position) {
+        SofaTab.Tabs tab = getTabConfig().tabs.get(position);
+        TagListFragment fragment = TagListFragment.newInstance(tab.tag);
+        return fragment;
+    }
+
+    @Override
+    public void onAttachFragment(@NonNull Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        String tagType = childFragment.getArguments().getString(TagListFragment.KEY_TAG_TYPE);
+        if (TextUtils.equals(tagType, "onlyFollow")) {
+            ViewModelProviders.of(childFragment).get(TagListViewModel.class)
+                    .getSwitchTabLiveData().observe(this,
+                    object -> viewPager2.setCurrentItem(1));
+        }
+    }
+
+    @Override
+    public SofaTab getTabConfig() {
+        return AppConfig.getFindTabConfig();
     }
 }

@@ -1,4 +1,4 @@
-package com.mooc.ppjoke.datasource;
+package com.mooc.ppjoke.ui;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.executor.ArchTaskExecutor;
@@ -10,26 +10,20 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 把List数据包装成DataSource
+ * 具体原理见 {@link MutableItemKeyedDataSource}
  *
  * @param <Value>
  */
 public class MutablePageKeyedDataSource<Value> extends PageKeyedDataSource<Integer, Value> {
-
     public List<Value> data = new ArrayList<>();
 
-    /**
-     * 构建PagedList
-     *
-     * @param config PagedList.Config
-     * @return
-     */
     public PagedList<Value> buildNewPagedList(PagedList.Config config) {
-
-        return new PagedList.Builder<Integer, Value>(this, config)
+        PagedList<Value> pagedList = new PagedList.Builder<Integer, Value>(this, config)
                 .setFetchExecutor(ArchTaskExecutor.getIOThreadExecutor())
                 .setNotifyExecutor(ArchTaskExecutor.getMainThreadExecutor())
                 .build();
+
+        return pagedList;
     }
 
     @Override

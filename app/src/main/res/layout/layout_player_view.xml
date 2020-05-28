@@ -5,22 +5,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.mooc.libcommon.view.PPImageView
+    <com.mooc.ppjoke.view.PPImageView
         android:id="@+id/blur_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:transitionName="blur_image"
-        tools:background="@color/color_theme_10"/>
+        tools:background="@color/color_theme_10">
+
+    </com.mooc.ppjoke.view.PPImageView>
 
 
     <!--    真正能够播放展示视频画面的view  会动态的添加到这里-->
 
 
-    <com.mooc.libcommon.view.PPImageView
+    <com.mooc.ppjoke.view.PPImageView
         android:id="@+id/cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:transitionName="cover"/>
+        android:transitionName="cover"></com.mooc.ppjoke.view.PPImageView>
 
 
     <ImageView
@@ -29,7 +31,7 @@
         android:layout_height="@dimen/dp_40"
         android:layout_gravity="center"
         android:src="@drawable/icon_video_play"
-        android:transitionName="play_btn"/>
+        android:transitionName="play_btn"></ImageView>
 
 
     <!--    视频播放时的底部进度条-->

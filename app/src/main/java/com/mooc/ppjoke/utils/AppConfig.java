@@ -4,9 +4,9 @@ import android.content.res.AssetManager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.mooc.libcommon.global.AppGlobals;
 import com.mooc.ppjoke.model.BottomBar;
 import com.mooc.ppjoke.model.Destination;
-import com.mooc.libcommon.global.AppGlobals;
 import com.mooc.ppjoke.model.SofaTab;
 
 import java.io.BufferedReader;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class AppConfig {
     private static HashMap<String, Destination> sDestConfig;
     private static BottomBar sBottomBar;
-    private static SofaTab sSofaTab;
+    private static SofaTab sSofaTab, sFindTabConfig;
 
     public static HashMap<String, Destination> getDestConfig() {
         if (sDestConfig == null) {
@@ -29,6 +29,14 @@ public class AppConfig {
             });
         }
         return sDestConfig;
+    }
+
+    public static BottomBar getBottomBarConfig() {
+        if (sBottomBar == null) {
+            String content = parseFile("main_tabs_config.json");
+            sBottomBar = JSON.parseObject(content, BottomBar.class);
+        }
+        return sBottomBar;
     }
 
     public static SofaTab getSofaTabConfig() {
@@ -45,12 +53,18 @@ public class AppConfig {
         return sSofaTab;
     }
 
-    public static BottomBar getBottomBarConfig() {
-        if (sBottomBar == null) {
-            String content = parseFile("main_tabs_config.json");
-            sBottomBar = JSON.parseObject(content, BottomBar.class);
+    public static SofaTab getFindTabConfig() {
+        if (sFindTabConfig == null) {
+            String content = parseFile("find_tabs_config.json");
+            sFindTabConfig = JSON.parseObject(content, SofaTab.class);
+            Collections.sort(sFindTabConfig.tabs, new Comparator<SofaTab.Tabs>() {
+                @Override
+                public int compare(SofaTab.Tabs o1, SofaTab.Tabs o2) {
+                    return o1.index < o2.index ? -1 : 1;
+                }
+            });
         }
-        return sBottomBar;
+        return sFindTabConfig;
     }
 
     private static String parseFile(String fileName) {
