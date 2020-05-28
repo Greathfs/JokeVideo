@@ -1,16 +1,13 @@
 package com.mooc.ppjoke.ui.detail;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +27,6 @@ import com.mooc.libcommon.global.AppGlobals;
 import com.mooc.libcommon.utils.FileUploadManager;
 import com.mooc.libcommon.utils.FileUtils;
 import com.mooc.libcommon.utils.PixUtils;
-import com.mooc.libcommon.view.PPEditTextView;
 import com.mooc.libcommon.view.ViewHelper;
 import com.mooc.libnetwork.ApiResponse;
 import com.mooc.libnetwork.ApiService;
@@ -46,7 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CommentDialog extends AppCompatDialogFragment implements View.OnClickListener {
     private LayoutCommentDialogBinding mBinding;
     private long itemId;
-    private commentAddListener mListener;
+    private OnCommentAddListener mListener;
     private static final String KEY_ITEM_ID = "key_item_id";
     private String filePath;
     private int width, height;
@@ -295,11 +291,11 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
         }
     }
 
-    public interface commentAddListener {
+    public interface OnCommentAddListener {
         void onAddComment(Comment comment);
     }
 
-    public void setCommentAddListener(commentAddListener listener) {
+    public void setCommentAddListener(OnCommentAddListener listener) {
 
         mListener = listener;
     }
