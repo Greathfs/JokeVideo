@@ -82,11 +82,17 @@ dependencies {
     api 'jp.wasabeef:glide-transformations:4.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
-    //camera
-    api 'androidx.camera:camera-core:1.0.0-alpha04'
-    api 'androidx.camera:camera-camera2:1.0.0-alpha04'
-    api 'androidx.camera:camera-view:1.0.0-alpha01'
-    api 'androidx.camera:camera-extensions:1.0.0-alpha01'
+    // Use the most recent version of CameraX, currently that is alpha04
+    def camerax_core_version = "1.0.0-beta03"
+    def camerax_version = "1.0.0-alpha10"
+    api "androidx.camera:camera-core:${camerax_core_version}"
+    api "androidx.camera:camera-camera2:${camerax_core_version}"
+// If you want to use the CameraX View class
+    api "androidx.camera:camera-view:${camerax_version}"
+// If you want to use the CameraX Extensions library
+    api "androidx.camera:camera-extensions:${camerax_version}"
+// If you want to use the CameraX Lifecycle library
+    api "androidx.camera:camera-lifecycle:${camerax_version}"
 
     //workmanager
     api 'androidx.work:work-runtime:2.2.0'

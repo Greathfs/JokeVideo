@@ -24,19 +24,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.arch.core.executor.ArchTaskExecutor;
+import androidx.camera.core.AspectRatio;
+import androidx.camera.core.Camera;
+import androidx.camera.core.CameraInfo;
 import androidx.camera.core.CameraInfoUnavailableException;
+import androidx.camera.core.CameraSelector;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureConfig;
+import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
-import androidx.camera.core.PreviewConfig;
 import androidx.camera.core.UseCase;
 import androidx.camera.core.VideoCapture;
-import androidx.camera.core.VideoCaptureConfig;
+import androidx.camera.core.impl.VideoCaptureConfig;
+import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.mooc.ppjoke.R;
 import com.mooc.ppjoke.databinding.ActivityLayoutCaptureBinding;
 import com.mooc.ppjoke.view.RecordView;
@@ -47,7 +53,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 
 public class CaptureActivity extends AppCompatActivity {
     public static final int REQ_CAPTURE = 10001;
@@ -55,20 +64,21 @@ public class CaptureActivity extends AppCompatActivity {
     private static final String[] PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
     private static final int PERMISSION_CODE = 1000;
     private ArrayList<String> deniedPermission = new ArrayList<>();
-    private CameraX.LensFacing mLensFacing = CameraX.LensFacing.BACK;
     private int rotation = Surface.ROTATION_0;
     private Size resolution = new Size(1280, 720);
     private Rational rational = new Rational(9, 16);
     private Preview preview;
     private ImageCapture imageCapture;
     private VideoCapture videoCapture;
-    private TextureView textureView;
     private boolean takingPicture;
     private String outputFilePath;
     public static final String RESULT_FILE_PATH = "file_path";
     public static final String RESULT_FILE_WIDTH = "file_width";
     public static final String RESULT_FILE_HEIGHT = "file_height";
     public static final String RESULT_FILE_TYPE = "file_type";
+    private Executor executor;
+    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    private CameraSelector cameraSelector;
 
     public static void startActivityForResult(Activity activity) {
         Intent intent = new Intent(activity, CaptureActivity.class);
@@ -86,16 +96,19 @@ public class CaptureActivity extends AppCompatActivity {
                 takingPicture = true;
                 File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), System.currentTimeMillis() + ".jpeg");
                 mBinding.captureTips.setVisibility(View.INVISIBLE);
-                imageCapture.takePicture(file, new ImageCapture.OnImageSavedListener() {
+                ImageCapture.OutputFileOptions outputFileOptions =
+                        new ImageCapture.OutputFileOptions.Builder(file).build();
+                imageCapture.takePicture(outputFileOptions,executor, new ImageCapture.OnImageSavedCallback() {
                     @Override
-                    public void onImageSaved(@NonNull File file) {
+                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         onFileSaved(file);
                     }
 
                     @Override
-                    public void onError(@NonNull ImageCapture.UseCaseError useCaseError, @NonNull String message, @Nullable Throwable cause) {
-                        showErrorToast(message);
+                    public void onError(@NonNull ImageCaptureException exception) {
+                        showErrorToast(Objects.requireNonNull(exception.getMessage()));
                     }
+
                 });
             }
 
@@ -104,14 +117,14 @@ public class CaptureActivity extends AppCompatActivity {
             public void onLongClick() {
                 takingPicture = false;
                 File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), System.currentTimeMillis() + ".mp4");
-                videoCapture.startRecording(file, new VideoCapture.OnVideoSavedListener() {
+                videoCapture.startRecording(file, executor, new VideoCapture.OnVideoSavedCallback() {
                     @Override
-                    public void onVideoSaved(File file) {
+                    public void onVideoSaved(@NonNull File file) {
                         onFileSaved(file);
                     }
 
                     @Override
-                    public void onError(VideoCapture.UseCaseError useCaseError, String message, @Nullable Throwable cause) {
+                    public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
                         showErrorToast(message);
                     }
                 });
@@ -193,26 +206,44 @@ public class CaptureActivity extends AppCompatActivity {
 
     @SuppressLint("RestrictedApi")
     private void bindCameraX() {
+
+        executor = ContextCompat.getMainExecutor(this);
+
+        cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+        cameraProviderFuture.addListener(() -> {
+            try {
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                bindPreview(cameraProvider);
+            } catch (ExecutionException | InterruptedException e) {
+                // No errors need to be handled for this Future.
+                // This should never be reached.
+            }
+        }, executor);
+
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void bindPreview(ProcessCameraProvider cameraProvider) {
         CameraX.unbindAll();
+
+        cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build();
 
         //查询一下当前要使用的设备摄像头(比如后置摄像头)是否存在
         boolean hasAvailableCameraId = false;
-        try {
-            hasAvailableCameraId = CameraX.hasCameraWithLensFacing(mLensFacing);
-        } catch (CameraInfoUnavailableException e) {
-            e.printStackTrace();
-        }
+        hasAvailableCameraId = CameraX.hasCamera(cameraSelector);
 
         if (!hasAvailableCameraId) {
             showErrorToast("无可用的设备cameraId!,请检查设备的相机是否被占用");
             finish();
             return;
         }
-
+//
         //查询一下是否存在可用的cameraId.形式如：后置："0"，前置："1"
         String cameraIdForLensFacing = null;
         try {
-            cameraIdForLensFacing = CameraX.getCameraFactory().cameraIdForLensFacing(mLensFacing);
+            cameraIdForLensFacing = CameraX.getCameraFactory().cameraIdForLensFacing(CameraSelector.LENS_FACING_BACK);
         } catch (CameraInfoUnavailableException e) {
             e.printStackTrace();
         }
@@ -222,69 +253,40 @@ public class CaptureActivity extends AppCompatActivity {
             return;
         }
 
-        PreviewConfig config = new PreviewConfig.Builder()
-                //前后摄像头
-                .setLensFacing(mLensFacing)
-                //旋转角度
-                .setTargetRotation(rotation)
-                //分辨率
-                .setTargetResolution(resolution)
-                //宽高比
-                .setTargetAspectRatio(rational)
+        Preview preview = new Preview.Builder()
+                .setCameraSelector(cameraSelector) //前后摄像头
+                .setTargetAspectRatio(AspectRatio.RATIO_16_9) //宽高比
+                .setTargetRotation(rotation) //旋转角度
+                //.setTargetResolution(resolution) //分辨率
                 .build();
-        preview = new Preview(config);
 
-        imageCapture = new ImageCapture(new ImageCaptureConfig.Builder()
-                .setTargetAspectRatio(rational)
-                .setTargetResolution(resolution)
-                .setLensFacing(mLensFacing)
-                .setTargetRotation(rotation).build());
-
-        videoCapture = new VideoCapture(new VideoCaptureConfig.Builder()
+        imageCapture = new ImageCapture.Builder()
+                .setCameraSelector(cameraSelector)
+                .setTargetAspectRatio(AspectRatio.RATIO_16_9)
                 .setTargetRotation(rotation)
-                .setLensFacing(mLensFacing)
-                .setTargetResolution(resolution)
-                .setTargetAspectRatio(rational)
+                //.setTargetResolution(resolution)
+                .build();
+
+        videoCapture = new VideoCaptureConfig.Builder()
+                .setCameraSelector(cameraSelector)
+                .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+                .setTargetRotation(rotation)
+                //.setTargetResolution(resolution)
                 //视频帧率
                 .setVideoFrameRate(25)
                 //bit率
-                .setBitRate(3 * 1024 * 1024).build());
-        preview.setOnPreviewOutputUpdateListener(new Preview.OnPreviewOutputUpdateListener() {
-            @Override
-            public void onUpdated(Preview.PreviewOutput output) {
+                .setBitRate(10440).build();
 
-                textureView = mBinding.textureView;
-                ViewGroup parent = (ViewGroup) textureView.getParent();
-                parent.removeView(textureView);
-                parent.addView(textureView, 0);
+        //Caused by: java.lang.IllegalArgumentException: No supported surface combination is found for camera device - Id : 0.  May be attempting to bind too many use cases.
+        //cameraSelector与videoCapture不能同时绑定
+//        Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, videoCapture, preview);
 
-                textureView.setSurfaceTexture(output.getSurfaceTexture());
-            }
-        });
+//        Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, preview);
+        Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, videoCapture, preview);
 
-        //上面配置的都是我们期望的分辨率
-        List<UseCase> newUseList = new ArrayList<>();
-        newUseList.add(preview);
-        newUseList.add(imageCapture);
-        newUseList.add(videoCapture);
-        //下面我们要查询一下 当前设备它所支持的分辨率有哪些，然后再更新一下 所配置的几个usecase
-        Map<UseCase, Size> resolutions = CameraX.getSurfaceManager().getSuggestedResolutions(cameraIdForLensFacing, null, newUseList);
-        Iterator<Map.Entry<UseCase, Size>> iterator = resolutions.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<UseCase, Size> next = iterator.next();
-            UseCase useCase = next.getKey();
-            Size value = next.getValue();
-            Map<String, Size> update = new HashMap<>();
-            update.put(cameraIdForLensFacing, value);
-            useCase.updateSuggestedResolution(update);
-        }
-        CameraX.bindToLifecycle(this, preview, imageCapture, videoCapture);
-    }
+        CameraInfo cameraInfo = camera.getCameraInfo();
 
-    @Override
-    protected void onDestroy() {
-        CameraX.unbindAll();
-        super.onDestroy();
+        preview.setSurfaceProvider(mBinding.previewView.createSurfaceProvider(cameraInfo));
     }
 }
 

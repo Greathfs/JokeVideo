@@ -10,10 +10,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextureView
-            android:id="@+id/texture_view"
+        <androidx.camera.view.PreviewView
+            android:id="@+id/preview_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></TextureView>
+            android:layout_height="match_parent"></androidx.camera.view.PreviewView>
 
         <TextView
             android:id="@+id/capture_tips"
